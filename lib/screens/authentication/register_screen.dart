@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/error_dialog.dart';
 
 import '../../widgets/app_text_field_widget.dart';
 
@@ -29,27 +30,69 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Position? position;
   List<Placemark>? placeMarks;
 
-  Future<void> _getImage() async{
-    imageXFile= await _picker.pickImage(source: ImageSource.gallery);
+  Future<void> _getImage() async {
+    imageXFile = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       imageXFile;
     });
   }
 
-  getCurrentLocation() async{
+  getCurrentLocation() async {
     Position newPosition = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
     position = newPosition;
-    placeMarks=await placemarkFromCoordinates(
-        position!.latitude,
-        position!.longitude,
+    placeMarks = await placemarkFromCoordinates(
+      position!.latitude,
+      position!.longitude,
     );
 
     Placemark pMark = placeMarks![0];
-    String completeAddress = '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
-    locationController.text= completeAddress;
+    String completeAddress =
+        '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
+    locationController.text = completeAddress;
   }
+
+  Future<void> formValidation() async {
+    if (imageXFile == null) {
+      showDialog(
+        context: context,
+        builder: (c) {
+          return ErrorDialog(
+            message: "Please select an Image",
+          );
+        },
+      );
+    } else {
+      if (passController.text == confirmPassController.text) {
+        if(confirmPassController.text.isNotEmpty && nameController.text.isNotEmpty && emailController.text.isNotEmpty && locationController.text.isNotEmpty)
+          {
+            //start uploading image
+          }
+        else
+          {
+            showDialog(
+              context: context,
+              builder: (c) {
+                return ErrorDialog(
+                  message: "Please provide required information...",
+                );
+              },
+            );
+          }
+      } else {
+        showDialog(
+          context: context,
+          builder: (c) {
+            return ErrorDialog(
+              message: "Password do not match.",
+            );
+          },
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -60,7 +103,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: 10,
           ),
           InkWell(
-            onTap: (){
+            onTap: () {
               _getImage();
             },
             child: CircleAvatar(
@@ -119,7 +162,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: locationController,
                   hintText: 'Cafe/Restaurant Address',
                   isObscure: false,
-                  enabled: false,
                 ),
                 Container(
                   width: 400,
@@ -134,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       Icons.location_on,
                       color: Colors.white,
                     ),
-                    onPressed: (){
+                    onPressed: () {
                       getCurrentLocation();
                     },
                     style: ElevatedButton.styleFrom(
@@ -151,12 +193,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             height: 30,
           ),
           ElevatedButton(
-              onPressed: ()=>print('clicked'),
+            onPressed: () => print('clicked'),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.purple,
-              padding:const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
             ),
-              child: const Text('Sign Up',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+            child: const Text(
+              'Sign Up',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
           )
         ],
       ),

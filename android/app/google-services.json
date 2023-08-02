@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "874312442745",
+    "project_id": "food-seller-app-d20a7",
+    "storage_bucket": "food-seller-app-d20a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874312442745:android:4b6b6597a5441d607e05a8",
+        "android_client_info": {
+          "package_name": "com.razupk.sellersapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874312442745-v8bjeq6lq9kjlugg0aapfp81gm5kfetu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8mKmOng9eLU0FjVd5zG3j9j8jODEnWow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874312442745-v8bjeq6lq9kjlugg0aapfp81gm5kfetu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
