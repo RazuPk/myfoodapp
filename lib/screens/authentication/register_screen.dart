@@ -1,12 +1,15 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myfoodapp/widgets/loading_dialog.dart';
 import '../../widgets/error_dialog.dart';
-
 import '../../widgets/app_text_field_widget.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fstorage;
+
+import '../mainScreen/HomeScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -26,31 +29,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
-
-  Position? position;
-  List<Placemark>? placeMarks;
+  String sellerImageUrl='';
 
   Future<void> _getImage() async {
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       imageXFile;
     });
-  }
-
-  getCurrentLocation() async {
-    Position newPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    position = newPosition;
-    placeMarks = await placemarkFromCoordinates(
-      position!.latitude,
-      position!.longitude,
-    );
-
-    Placemark pMark = placeMarks![0];
-    String completeAddress =
-        '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea}, ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
-    locationController.text = completeAddress;
   }
 
   Future<void> formValidation() async {
@@ -65,9 +50,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     } else {
       if (passController.text == confirmPassController.text) {
-        if(confirmPassController.text.isNotEmpty && nameController.text.isNotEmpty && emailController.text.isNotEmpty && locationController.text.isNotEmpty)
+        if( nameController.text.isNotEmpty && emailController.text.isNotEmpty && confirmPassController.text.isNotEmpty && phoneController.text.isNotEmpty && locationController.text.isNotEmpty)
           {
             //start uploading image
+            showDialog(
+              context: context,
+              builder: (c)
+                {
+                  return LoadingDialog(
+                    message: "Registering Account...",
+                  );
+                }
+            );
+            String filename = DateTime.now().millisecondsSinceEpoch.toString();
+            fstorage.Reference reference = fstorage.FirebaseStorage.instance.ref().child('sellers').child(filename);
+            fstorage.UploadTask uploadTask = reference.putFile(File(imageXFile!.path));
+            fstorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete((){});
+            await taskSnapshot.ref.getDownloadURL().then((url){
+              sellerImageUrl = url;
+              //save info to fire store database
+              authenticateSellerAndSignUp();
+            });
           }
         else
           {
@@ -93,6 +96,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  void authenticateSellerAndSignUp() async{
+    User? currentUser;
+    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+    await firebaseAuth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(), password: passController.text.trim(),
+    ).then((auth){
+      currentUser = auth.user;
+    });
+
+    if(currentUser !=null){
+      saveDataToFirestore(currentUser!).then((value){
+        Navigator.pop(context);
+        //send user to homepage
+        Route newRoute = MaterialPageRoute(builder: (c) => HomeScreen());
+        Navigator.pushReplacement(context, newRoute);
+      });
+    }
+  }
+
+  Future saveDataToFirestore(User currentUser) async{
+    FirebaseFirestore.instance.collection('sellers').doc(currentUser.uid).set(
+        {
+          'sellerUid': currentUser.uid,
+          'sellerEmail':currentUser.email,
+          'sellerName':nameController.text.trim(),
+          'sellerAvaterUrl':sellerImageUrl,
+          'phone':phoneController.text.trim(),
+          'address':locationController.text.trim(),
+          'status':'Approved',
+          'earnings':0.0,
+        });
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -163,37 +199,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: 'Cafe/Restaurant Address',
                   isObscure: false,
                 ),
-                Container(
-                  width: 400,
-                  height: 40,
-                  alignment: Alignment.center,
-                  child: ElevatedButton.icon(
-                    label: const Text(
-                      'Get My Location',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    icon: const Icon(
-                      Icons.location_on,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      getCurrentLocation();
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        )),
-                  ),
-                )
               ],
             ),
           ),
           const SizedBox(
-            height: 30,
+            height: 24,
           ),
           ElevatedButton(
-            onPressed: () => print('clicked'),
+            onPressed: (){
+              formValidation();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.purple,
               padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
