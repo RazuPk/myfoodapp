@@ -6,6 +6,7 @@ class AppTextFieldWidget extends StatelessWidget {
   final TextEditingController? controller;
   final IconData? data;
   final String? hintText;
+  final TextInputType? textInputType;
   bool? isObscure = true;
   bool? enabled = true;
 
@@ -15,6 +16,7 @@ class AppTextFieldWidget extends StatelessWidget {
     this.hintText,
     this.isObscure,
     this.enabled,
+    this.textInputType,
 });
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class AppTextFieldWidget extends StatelessWidget {
         enabled: enabled,
         controller: controller,
         obscureText: isObscure!,
+        keyboardType: textInputType,
         cursorColor: Theme.of(context).primaryColor,
         decoration: InputDecoration(
           border: InputBorder.none,
