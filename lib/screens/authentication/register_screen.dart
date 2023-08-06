@@ -4,14 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myfoodapp/widgets/loading_dialog.dart';
+import '../../widgets/loading_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../global/global.dart';
 import '../../widgets/error_dialog.dart';
 import '../../widgets/app_text_field_widget.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fstorage;
 
-import '../mainScreen/Home_screen.dart';
+import '../sellers_screens/sellers_home_screen.dart';
+
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -121,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       saveDataToFirestore(currentUser!).then((value) {
         Navigator.pop(context);
         //send user to homepage
-        Route newRoute = MaterialPageRoute(builder: (c) => HomeScreen());
+        Route newRoute = MaterialPageRoute(builder: (c) => SellersHomeScreen());
         Navigator.pushReplacement(context, newRoute);
       });
     }

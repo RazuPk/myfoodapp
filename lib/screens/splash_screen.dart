@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:myfoodapp/global/global.dart';
-import 'package:myfoodapp/screens/mainScreen/Home_screen.dart';
+import '../global/global.dart';
+import '../screens/sellers_screens/sellers_home_screen.dart';
 
 import 'authentication/auth_screen.dart';
 
@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   startTimer(){
     Timer(const Duration(seconds: 1), () async{
       if(firebaseAuth.currentUser != null){
-        Navigator.push(context, MaterialPageRoute(builder: (c)=>const HomeScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (c)=>const SellersHomeScreen()));
       }else{
         Navigator.push(context, MaterialPageRoute(builder: (c)=>const AuthScreen()));
       }

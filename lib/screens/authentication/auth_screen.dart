@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../screens/authentication/register_screen.dart';
 
+import '../../widgets/flexible_space_widget.dart';
 import 'login_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -17,20 +18,7 @@ class _AuthScreenState extends State<AuthScreen> {
       length: 2,
       child: Scaffold(
         appBar:AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.cyan,
-                  Colors.amber
-                ],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              )
-            ),
-          ),
+          flexibleSpace: FlexibleSpaceWidget(),
           title:const Padding(
             padding: EdgeInsets.symmetric(horizontal: 4,vertical: 8),
             child: Text('myFood',

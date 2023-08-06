@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:myfoodapp/global/global.dart';
-import 'package:myfoodapp/widgets/error_dialog.dart';
-import 'package:myfoodapp/widgets/loading_dialog.dart';
+import '../../global/global.dart';
+import '../../screens/sellers_screens/sellers_home_screen.dart';
+import '../../widgets/error_dialog.dart';
+import '../../widgets/loading_dialog.dart';
 
 import '../../widgets/app_text_field_widget.dart';
-import '../mainScreen/Home_screen.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if(currentUser != null){
       readDataAndSetDataLocally(currentUser!).then((value){
       Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (c) => HomeScreen()));
+      Navigator.push(context, MaterialPageRoute(builder: (c) => SellersHomeScreen()));
 });
     }
   }
