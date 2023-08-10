@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:myfoodapp/screens/sellers_screens/bottom_navbar_screen.dart';
 import '../global/global.dart';
 import '../screens/sellers_screens/sellers_home_screen.dart';
 
-import 'authentication/auth_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if(firebaseAuth.currentUser != null){
         Navigator.push(context, MaterialPageRoute(builder: (c)=>const SellersHomeScreen()));
       }else{
-        Navigator.push(context, MaterialPageRoute(builder: (c)=>const AuthScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (c)=> BottomNavBarScreen()));
       }
     });
   }
