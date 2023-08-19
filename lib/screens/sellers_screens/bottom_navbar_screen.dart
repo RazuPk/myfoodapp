@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../../screens/sellers_screens/home_screen.dart';
 import '../../screens/sellers_screens/order_screen.dart';
 import '../../screens/sellers_screens/products_screen.dart';
+import '../../utils/style.dart';
+import '../../utils/app_colors.dart';
 
-import '../../widgets/flexible_space_widget.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
   const BottomNavBarScreen({super.key});
@@ -13,56 +14,52 @@ class BottomNavBarScreen extends StatefulWidget {
 }
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
-  final List<Widget> _screen = [
+  int _selectedScreen = 0;
+  List<Widget> _screen = [
     HomeScreen(),
     ProductsScreen(),
     OrderScreen(),
   ];
-
-  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: FlexibleSpaceWidget(),
-        title:const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4,vertical: 8),
-          child: Text('myFood',
-              style:TextStyle(
-                fontSize: 40,
-                color: Colors.white,
-                fontFamily: "Labester",
-              )),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.amber,
+              ],
+              begin: FractionalOffset(0.0 , 0.0),
+              end: FractionalOffset(1.0 , 0.0),
+              stops: [0.0 , 1.0],
+              tileMode: TileMode.clamp,
+            )
+          ),
         ),
+        title: Text("MyFood",style: titleStyle,),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
-      body: _screen[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value){
-          _selectedIndex = value;
-          if (mounted) {
-            setState(() {});
-          }
+          setState(() {
+            _selectedScreen = value;
+          });
         },
-        elevation: 4,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        elevation: 5,
+        currentIndex: _selectedScreen,
+        selectedItemColor: primaryColor,
+        unselectedItemColor: greyColor,
         showUnselectedLabels: true,
-        currentIndex: _selectedIndex,
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shop),
-            label: "Products",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_shopping_cart_outlined),
-            label: "Orders",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: "Products"),
+          BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart_outlined), label: "Cart"),
         ],
       ),
+      body: _screen[_selectedScreen],
     );
   }
 }

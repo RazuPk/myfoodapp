@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:myfoodapp/screens/sellers_screens/bottom_navbar_screen.dart';
+import '../screens/sellers_screens/bottom_navbar_screen.dart';
 import '../global/global.dart';
 import '../screens/sellers_screens/sellers_home_screen.dart';
 
