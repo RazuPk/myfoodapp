@@ -47,7 +47,7 @@ class _SellersHomeScreenState extends State<SellersHomeScreen> {
                 crossAxisCount: 3, childAspectRatio: 0.75,),
             itemCount: 16,
             itemBuilder: (context, index) {
-              return ProductCardWidget(image: "images/vegetable.png", title: 'Chicken Burger', price: '140', ratings: '4.7',);
+              return ProductCardWidget(imageUrl: "images/vegetable.png", title: 'Chicken Burger', price: '140', ratings: '4.7',);
             })
     );
   }

@@ -1,62 +1,91 @@
 import 'package:flutter/material.dart';
+import '../utils/app_colors.dart';
 
 class ProductCardWidget extends StatelessWidget {
   const ProductCardWidget({
-    super.key,
-    required this.image,
-    required this.title,
-    required this.price,
-    required this.ratings,
+    super.key, required this.imageUrl, required this.title, required this.price, required this.ratings,
   });
-  final String image,title, price, ratings;
+  final String imageUrl,title,price,ratings;
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
+    return SizedBox(
+      width: 140,
       child: Card(
         elevation: 3,
-        shadowColor: Colors.blueAccent,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)
+          borderRadius: BorderRadius.circular(5),
         ),
+        shadowColor: primaryColor.withOpacity(0.2),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 6),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Card(
-                elevation: 4,
-                shadowColor: Colors.amber,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Image.asset(image,
-                  height: MediaQuery.of(context).size.height * 0.20,
-                  fit: BoxFit.fill,
-                ),
+              Image.asset(
+                imageUrl,
+                width: 132,
+                height: 90,
+                fit: BoxFit.scaleDown,
               ),
-              SizedBox(height: 6,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(title,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.blue),
+              Padding(
+                padding: const EdgeInsets.all(5),
+                child: Column(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.2,
+                        height: 1.2,
+                        color: softGreyColor,
+                      ),
+                    ),
+                    SizedBox(height: 8,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "\$ $price",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: primaryColor,
+                          ),
+                        ),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.star,
+                              size: 14,
+                              color: Colors.amber,
+                            ),
+                            SizedBox(width: 4,),
+                            Text(
+                              ratings,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: softGreyColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: primaryColor,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: Icon(Icons.favorite_border,size: 12,color: Colors.white,),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 8,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("\$$price",style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500,color: Colors.blue),),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 1.0,
-                    children: [
-                      Text(ratings,style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.amber),),
-                      Icon(Icons.star,size: 16,color: Colors.amber,)
-                    ],
-                  ),
-                ],
-              ),
+              )
             ],
           ),
         ),

@@ -42,6 +42,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
+      body: _screen[_selectedScreen],
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value){
           setState(() {
@@ -53,13 +54,15 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         selectedItemColor: primaryColor,
         unselectedItemColor: greyColor,
         showUnselectedLabels: true,
+        selectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: "Products"),
           BottomNavigationBarItem(icon: Icon(Icons.add_shopping_cart_outlined), label: "Cart"),
         ],
       ),
-      body: _screen[_selectedScreen],
     );
   }
 }
